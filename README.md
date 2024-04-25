@@ -2,6 +2,8 @@
 ## To bring up all the services run the below command
 docker compose up -d
 
+[source code of all services is given just for your reference]
+
 ## To execute and recreate the error follow below steps, 
 ## 1. Login to rabbit mq (localhost:15676) with username: guest and password: guest
 ## 2. click on the "Queues and Streams" tab.
