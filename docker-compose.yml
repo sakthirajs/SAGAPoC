@@ -1,0 +1,81 @@
+version: '3'
+
+services:
+  rabbitmq-poc:
+    container_name: rabbitmq-poc
+    restart: always
+    image: rabbitmq:3-management
+    ports:
+      - '15676:15672'
+      - '5676:5672'
+
+  lra-service:
+    container_name: lra-service
+    restart: always
+    image: quay.io/jbosstm/lra-coordinator:latest
+    ports:
+      - '8088:8080'
+
+  saga-inventory-service:
+    container_name: saga-inventory-service
+    restart: always
+    image: 'docker.io/ottawahsosaga/saga-inventory-service:latest'
+    environment:
+      - RABBITMQ_PASSWORD:guest
+      - RABBITMQ_USERNAME:guest
+      - RABBITMQ_HOST:rabbitmq-poc
+      - RABBITMQ_PORT:5672
+      - COORDINATOR_SERVICE_PROTO=http
+      - COORDINATOR_SERVICE_HOST=lra-service
+      - COORDINATOR_SERVICE_PORT=8080
+      - LOCAL_PARTICIPANT_URL_PROTO=http
+      - LOCAL_PARTICIPANT_URL_HOST=saga-inventory-service
+      - LOCAL_PARTICIPANT_URL_PORT=9081
+    ports:
+      - '9081:8080'
+    command: mvn clean spring-boot:run
+    expose:
+      - '8080'
+
+  saga-order-manager:
+    container_name: saga-order-manager
+    restart: always
+    image: 'docker.io/ottawahsosaga/saga-order-manager:latest'
+    environment:
+      - RABBITMQ_PASSWORD:guest
+      - RABBITMQ_USERNAME:guest
+      - RABBITMQ_HOST:rabbitmq-poc
+      - RABBITMQ_PORT:5672
+      - COORDINATOR_SERVICE_PROTO=http
+      - COORDINATOR_SERVICE_HOST=lra-service
+      - COORDINATOR_SERVICE_PORT=8080
+      - LOCAL_PARTICIPANT_URL_PROTO=http
+      - LOCAL_PARTICIPANT_URL_HOST=saga-order-manager
+      - LOCAL_PARTICIPANT_URL_PORT=9080
+    ports:
+      - '9080:8080'
+    expose:
+      - '8080'
+
+  saga-payment-service:
+    container_name: saga-payment-service
+    restart: always
+    image: 'docker.io/ottawahsosaga/saga-payment-service:latest'
+    environment:
+      - RABBITMQ_PASSWORD:guest
+      - RABBITMQ_USERNAME:guest
+      - RABBITMQ_HOST:rabbitmq-poc
+      - RABBITMQ_PORT:5672
+      - COORDINATOR_SERVICE_PROTO=http
+      - COORDINATOR_SERVICE_HOST=lra-service
+      - COORDINATOR_SERVICE_PORT=8080
+      - LOCAL_PARTICIPANT_URL_PROTO=http
+      - LOCAL_PARTICIPANT_URL_HOST=saga-payment-service
+      - LOCAL_PARTICIPANT_URL_PORT=9082
+    ports:
+      - '9082:8080'
+    expose:
+      - '8080'
+
+volumes:
+  data: {}
