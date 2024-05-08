@@ -1,0 +1,91 @@
+{
+  "exchanges": [
+    {
+      "name": "saga.poc",
+      "vhost": "/",
+      "type": "direct",
+      "durable": false,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "inventory.service",
+      "vhost": "/",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "order.service",
+      "vhost": "/",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "inventory.response",
+      "vhost": "/",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "payment.service",
+      "vhost": "/",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "payment.response",
+      "vhost": "/",
+      "durable": false,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "saga.poc",
+      "vhost": "/",
+      "destination": "inventory.service",
+      "destination_type": "queue",
+      "routing_key": "inventory.key",
+      "arguments": {}
+    },
+    {
+      "source": "saga.poc",
+      "vhost": "/",
+      "destination": "inventory.response",
+      "destination_type": "queue",
+      "routing_key": "inventory.response.key",
+      "arguments": {}
+    }, {
+      "source": "saga.poc",
+      "vhost": "/",
+      "destination": "order.service",
+      "destination_type": "queue",
+      "routing_key": "order.key",
+      "arguments": {}
+    }, {
+      "source": "saga.poc",
+      "vhost": "/",
+      "destination": "payment.service",
+      "destination_type": "queue",
+      "routing_key": "payment.key",
+      "arguments": {}
+    },
+    {
+      "source": "saga.poc",
+      "vhost": "/",
+      "destination": "payment.response",
+      "destination_type": "queue",
+      "routing_key": "payment.response.key",
+      "arguments": {}
+    }
+
+  ]
+}

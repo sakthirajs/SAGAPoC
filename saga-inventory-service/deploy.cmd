@@ -1,0 +1,1 @@
+mvnw -DskipTests=true package && cd dockersurveyinstrument && docker-compose -f app-local.yml build && docker-compose -f app-local.yml up -d && cd ..

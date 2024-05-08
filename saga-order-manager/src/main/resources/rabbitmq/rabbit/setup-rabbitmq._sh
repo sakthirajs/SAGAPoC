@@ -1,0 +1,20 @@
+#!/bin/bash
+# Start RabbitMQ server in the background
+rabbitmq-server -detached
+
+# Wait for RabbitMQ to start
+sleep 5
+
+# Define RabbitMQ exchange, queue, and binding details
+EXCHANGE_NAME="saga.poc"
+QUEUE_NAME="order.service"
+ROUTING_KEY="order.key"
+
+# Declare the exchange
+rabbitmqadmin declare exchange name="$EXCHANGE_NAME" type=direct
+
+# Declare the queue
+rabbitmqadmin declare queue name="$QUEUE_NAME" durable=false
+
+# Bind the queue to the exchange
+rabbitmqadmin declare binding source="$EXCHANGE_NAME" destination="$QUEUE_NAME" routing_key="$ROUTING_KEY"
